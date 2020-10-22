@@ -1,0 +1,67 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Машинное обучение #  Введение в машинное обучение и основные понятия статистики #  Типы признаков #   Количественный (числовой) - область значения - вещественные числа, сам имеет числовую природу Порядковый - задаёт порядок на объектах Номинальный (категориальный) - не имеет числовой природы, как правило, число возможных значений конечно.  Бинарный - частный случай номинального признака, имеющий два значения    Характеристики признаков #  (где признак - столбец в таблице)"><meta name=theme-color content="#FFFFFF"><meta property="og:title" content="Машинное обучение"><meta property="og:description" content="Машинное обучение #  Введение в машинное обучение и основные понятия статистики #  Типы признаков #   Количественный (числовой) - область значения - вещественные числа, сам имеет числовую природу Порядковый - задаёт порядок на объектах Номинальный (категориальный) - не имеет числовой природы, как правило, число возможных значений конечно.  Бинарный - частный случай номинального признака, имеющий два значения    Характеристики признаков #  (где признак - столбец в таблице)"><meta property="og:type" content="article"><meta property="og:url" content="https://morggoth.github.io/docs/mooc/ml/"><meta property="article:published_time" content="2019-12-12T00:45:53+03:00"><meta property="article:modified_time" content="2019-12-12T00:45:53+03:00"><title>Машинное обучение | Morggoth's wiki</title><link rel=manifest href=/manifest.json><link rel=icon href=/favicon.png type=image/x-icon><link rel=stylesheet href=/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY="><script defer src=/en.search.min.fb23ee85f36429af5ddb65dece347fbf61513f4a2e4f415f7df821e1202feb11.js integrity="sha256-+yPuhfNkKa9d22XezjR/v2FRP0ouT0Ffffgh4SAv6xE="></script></head><body><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><nav><h2 class=book-brand><a href=/><span>Morggoth's wiki</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=/docs/misc/datastax_academy/cassandra_operations/>DS210: DataStax Enterprise 6 Operations with Apache Cassandra™</a></li><li><a href=/docs/misc/datastax_academy/casandra_foundations/>DS201: DataStax Enterprise 6 Foundations of Apache Cassandra™</a></li><li><a href=/docs/misc/foundation_of_kubernetes/>Foundation of Kubernetes</a></li><li><a href=/docs/misc/old_hardware/>Old hardware</a></li><li><a href=/docs/languages/scala/>Scala</a></li><li><a href=/docs/languages/c_sharp/>C#</a></li><li><a href=/docs/languages/c/>C</a></li><li><a href=/docs/misc/chromeos/>ChromeOS</a></li><li><a href=/docs/languages/java/>Java</a></li><li><a href=/docs/misc/macos/>macOS</a></li><li><a href=/docs/misc/mikrotik/>Mikrotik</a></li><li><a href=/docs/mooc/ class=collapsed>MOOC</a><ul><li><a href=/docs/mooc/ml/ class=active>Машинное обучение</a></li><li><a href=/docs/mooc/sams_cv/ class=collapsed>Нейронные сети и компьютерное зрение</a></li></ul></li><li><a href=/docs/misc/tips_and_tricks/>Tips & Tricks</a></li></ul></nav><script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label>
+<strong>Машинное обучение</strong>
+<label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#введение-в-машинное-обучение-и-основные-понятия-статистики>Введение в машинное обучение и основные понятия статистики</a><ul><li><a href=#типы-признаков>Типы признаков</a></li><li><a href=#характеристики-признаков>Характеристики признаков</a></li></ul></li><li><a href=#восстановление-пропущенных-значений>Восстановление пропущенных значений</a><ul><li><a href=#метрика-восстановление-пропущенных-объектов-по-их-близости-друг-к-другу>Метрика. Восстановление пропущенных объектов по их близости друг к другу</a></li></ul></li></ul></nav></aside></header><article class=markdown><h1 id=машинное-обучение>Машинное обучение
+<a class=anchor href=#%d0%bc%d0%b0%d1%88%d0%b8%d0%bd%d0%bd%d0%be%d0%b5-%d0%be%d0%b1%d1%83%d1%87%d0%b5%d0%bd%d0%b8%d0%b5>#</a></h1><h2 id=введение-в-машинное-обучение-и-основные-понятия-статистики>Введение в машинное обучение и основные понятия статистики
+<a class=anchor href=#%d0%b2%d0%b2%d0%b5%d0%b4%d0%b5%d0%bd%d0%b8%d0%b5-%d0%b2-%d0%bc%d0%b0%d1%88%d0%b8%d0%bd%d0%bd%d0%be%d0%b5-%d0%be%d0%b1%d1%83%d1%87%d0%b5%d0%bd%d0%b8%d0%b5-%d0%b8-%d0%be%d1%81%d0%bd%d0%be%d0%b2%d0%bd%d1%8b%d0%b5-%d0%bf%d0%be%d0%bd%d1%8f%d1%82%d0%b8%d1%8f-%d1%81%d1%82%d0%b0%d1%82%d0%b8%d1%81%d1%82%d0%b8%d0%ba%d0%b8>#</a></h2><h3 id=типы-признаков>Типы признаков
+<a class=anchor href=#%d1%82%d0%b8%d0%bf%d1%8b-%d0%bf%d1%80%d0%b8%d0%b7%d0%bd%d0%b0%d0%ba%d0%be%d0%b2>#</a></h3><ul><li>Количественный (числовой) - область значения - вещественные числа, сам имеет числовую природу</li><li>Порядковый - задаёт порядок на объектах</li><li>Номинальный (категориальный) - не имеет числовой природы, как правило, число возможных значений конечно.<ul><li>Бинарный - частный случай номинального признака, имеющий два значения</li></ul></li></ul><h3 id=характеристики-признаков>Характеристики признаков
+<a class=anchor href=#%d1%85%d0%b0%d1%80%d0%b0%d0%ba%d1%82%d0%b5%d1%80%d0%b8%d1%81%d1%82%d0%b8%d0%ba%d0%b8-%d0%bf%d1%80%d0%b8%d0%b7%d0%bd%d0%b0%d0%ba%d0%be%d0%b2>#</a></h3><p>(где признак - столбец в таблице)</p><ul><li>максимальное и минимальное значения</li><li>среднее значение ( среднее арифметическое )</li><li>медиана ( центральное значение в выборке ( либо среднее от двух центральных значений, если количество элементов четное ) )</li><li>мода ( наиболее часто встречающееся значение в выборке )</li><li>отклонение ( отражает отличие элементов выборки друг от друга, т.е. если все элементы одинаковы, отклонение - нулевое, в остальных случаях - положительное)</li><li>коэффициент корреляции:<ul><li>принадлежит к отрезку [-1, 1]</li><li>если равен нулю или близок к нему, то очевидной зависимости между признаками нет.</li><li>КК > 0 - прямая зависимость между признаками</li><li>КК &lt; 0 - обратная зависимость</li><li>чем ближе КК к |1|, тем зависимость ( при 1, она линейная )</li></ul></li></ul><p>Если медианное и среднее значения близки друг к другу, выборка называется симметричной.</p><h2 id=восстановление-пропущенных-значений>Восстановление пропущенных значений
+<a class=anchor href=#%d0%b2%d0%be%d1%81%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%89%d0%b5%d0%bd%d0%bd%d1%8b%d1%85-%d0%b7%d0%bd%d0%b0%d1%87%d0%b5%d0%bd%d0%b8%d0%b9>#</a></h2><p>Виды повреждения данных:</p><ul><li>пустые (пропущенные) значения</li><li>(заведомо) некорректные данные</li></ul><p>Способы борьбы с пропусками данных:</p><ul><li>удаление объекта (строки)</li><li>удаление столбца (в случае, если в нем много пустых объектов)</li><li>замена значения в ячейке:<ul><li>для числовых признаков:<ul><li>среднее</li><li>медиана</li></ul></li><li>для номинальных признаков:<ul><li>мода</li><li>генерация случайного значения с учетом вероятности, основанной на имеющихся признаках</li><li>приведение такого признака к числовому (может привести к появлению некорректных данных)</li></ul></li></ul></li></ul><h3 id=метрика-восстановление-пропущенных-объектов-по-их-близости-друг-к-другу>Метрика. Восстановление пропущенных объектов по их близости друг к другу
+<a class=anchor href=#%d0%bc%d0%b5%d1%82%d1%80%d0%b8%d0%ba%d0%b0-%d0%b2%d0%be%d1%81%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%bf%d1%80%d0%be%d0%bf%d1%83%d1%89%d0%b5%d0%bd%d0%bd%d1%8b%d1%85-%d0%be%d0%b1%d1%8a%d0%b5%d0%ba%d1%82%d0%be%d0%b2-%d0%bf%d0%be-%d0%b8%d1%85-%d0%b1%d0%bb%d0%b8%d0%b7%d0%be%d1%81%d1%82%d0%b8-%d0%b4%d1%80%d1%83%d0%b3-%d0%ba-%d0%b4%d1%80%d1%83%d0%b3%d1%83>#</a></h3><p>Метрика - обобщение понятия расстояния из геометрии и может быть вычислена для объектов произвольной природы.</p><p>Дано два набора данных:</p><link rel=stylesheet href=/katex/katex.min.css><script defer src=/katex/katex.min.js></script><script defer src=/katex/auto-render.min.js onload=renderMathInElement(document.body);></script><span>\(
+P = (p_1, p_2, ..., p_n)
+Q = (q_1, q_2, ..., q_n)
+\)</span><p>Формулы вычисления метрики:</p><ol><li>Евклидова метрика (геометрическая формула расстояния между точками):</li></ol><span>\(
+\rho(P,Q) = \sqrt{(p_1 - q_1)^2 + (p_2 - q_2)^2 + ... + (p_n - q_n)^2}
+\)</span><ol start=2><li>Метрика Манхеттен</li></ol><span>\(
+\rho(P,Q) = |p_1 - q_1| + |p_2 - q_2| + ... + |p_n - q_n|
+\)</span><ol start=3><li>Max-метрика</li></ol><span>\(
+\rho(P,Q) = max{|p_1 - q_1|, |p_2 - q_2|, ..., |p_n - q_n|}
+&lt;span>
+\(
+### Свойства метрики
+1. Расстояние от объекта до него же самого должно равняться нулю
+2. Расстояние от одного объекта до другого должно равняться обратному расстоянию
+3. Расстояние между двумя точками должно быть меньше чем сумма расстояний между этими точками и любой произвольной, не лежащей на прямой между ними (неравенство треугольника)
+Формула восстановления данных с помощью метрики
+&amp;lt;span&amp;gt;
+\(
+P(A) = \frac{1}{\sum_{i=1}^n \frac{1}{\rho(A,A_i)}}(\sum_{j=1}^1 \frac{P(A_j)}{\rho(A,A_j)})
+&amp;amp;lt;span&amp;amp;gt;
+\(
+### Способы нормирования признаков
+Нормирование - приведение всех признаков к единому масштабу.
+Признак: &amp;amp;amp;lt;span&amp;amp;amp;gt;
+\(P = (p_1, p_2, ..., p_n)&amp;amp;amp;amp;lt;span&amp;amp;amp;amp;gt;
+\(
+&amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;gt;
+\(\overline{p}&amp;amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;amp;gt;
+\( - среднее значение
+&amp;amp;amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;amp;amp;gt;
+\(s&amp;amp;amp;amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;amp;amp;amp;gt;
+\( - отклонение
+1. Приведение всех признаков в интервал [0, 1]:
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+\(
+p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;#39; = \frac{p_i - min{p_i}}{max{p_i}-min{p_i}}
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+\(
+2. Выполнить преобразование, после которого среднее значение и отклонение признака будут равны 0 и 1:
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+\(
+p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;#39;_i = \frac{p_i - \overline{p}}{s}
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;span&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+\(
+3. Помимо приведенных формул, к значению признака можно предварительно применять различные функции, например логарифмирование.\)
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;amp;gt;\)
+&amp;amp;amp;amp;lt;/span&amp;amp;amp;amp;gt;\)
+&amp;amp;amp;lt;/span&amp;amp;amp;gt;\)
+&amp;amp;lt;/span&amp;amp;gt;\)
+&amp;lt;/span&amp;gt;\)
+&lt;/span>\)</span></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><nav id=TableOfContents><ul><li><a href=#введение-в-машинное-обучение-и-основные-понятия-статистики>Введение в машинное обучение и основные понятия статистики</a><ul><li><a href=#типы-признаков>Типы признаков</a></li><li><a href=#характеристики-признаков>Характеристики признаков</a></li></ul></li><li><a href=#восстановление-пропущенных-значений>Восстановление пропущенных значений</a><ul><li><a href=#метрика-восстановление-пропущенных-объектов-по-их-близости-друг-к-другу>Метрика. Восстановление пропущенных объектов по их близости друг к другу</a></li></ul></li></ul></nav></aside></main></body></html>
