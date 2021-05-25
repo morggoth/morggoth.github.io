@@ -1,0 +1,230 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Start the project #  Astronomer CLI quickstart guide
+To prevent error like this:
+Env file &#34;.env&#34; found. Loading... buildkit not supported by daemon Error: command 'docker build -t astronomer_f5dd6c/airflow:latest failed: failed to execute cmd: exit status 1 You need to update your Docker config with this piece of code:
+&#34;features&#34;: { &#34;buildkit&#34;: false } Source of the solution
+mkdir <directory-name> && cd <directory-name> astro dev init astro dev start It starts 3 containers:"><meta name=theme-color content="#FFFFFF"><meta property="og:title" content="Apache Airflow fundamentals"><meta property="og:description" content="Start the project #  Astronomer CLI quickstart guide
+To prevent error like this:
+Env file &#34;.env&#34; found. Loading... buildkit not supported by daemon Error: command 'docker build -t astronomer_f5dd6c/airflow:latest failed: failed to execute cmd: exit status 1 You need to update your Docker config with this piece of code:
+&#34;features&#34;: { &#34;buildkit&#34;: false } Source of the solution
+mkdir <directory-name> && cd <directory-name> astro dev init astro dev start It starts 3 containers:"><meta property="og:type" content="article"><meta property="og:url" content="https://morggoth.github.io/docs/mooc/astronomer/"><meta property="article:published_time" content="2021-04-28T17:31:16+03:00"><meta property="article:modified_time" content="2021-04-28T17:31:16+03:00"><title>Apache Airflow fundamentals | Morggoth's wiki</title><link rel=manifest href=/manifest.json><link rel=icon href=/favicon.png type=image/x-icon><link rel=stylesheet href=/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY="><script defer src=/en.search.min.a958234550fd91b41857902b91a3c7fa61458e03d4584a1b6c547dba21ebadf0.js integrity="sha256-qVgjRVD9kbQYV5ArkaPH+mFFjgPUWEobbFR9uiHrrfA="></script></head><body><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><nav><h2 class=book-brand><a href=/><span>Morggoth's wiki</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=/docs/k8s/ class=collapsed>Kubernetes</a></li><li><a href=/docs/mooc/ class=collapsed>Courses notes</a><ul><li><a href=/docs/mooc/astronomer/ class=active>Apache Airflow fundamentals</a></li><li><a href=/docs/mooc/datastax_academy/cassandra_operations/>DS210: DataStax Enterprise 6 Operations with Apache Cassandra™</a></li><li><a href=/docs/mooc/datastax_academy/casandra_foundations/>DS201: DataStax Enterprise 6 Foundations of Apache Cassandra™</a></li><li><a href=/docs/mooc/math/ class=collapsed>Книга для чтения по высшей математике</a></li><li><a href=/docs/mooc/ml/>Машинное обучение</a></li><li><a href=/docs/mooc/sams_cv/ class=collapsed>Нейронные сети и компьютерное зрение</a></li></ul></li><li><a href=/docs/cloud/ class=collapsed>Cloud</a></li><li><a href=/docs/misc/cheatsheets/>Cheatsheets</a></li><li><a href=/docs/misc/rpi/>Raspberry Pi</a></li><li><a href=/docs/misc/kafka/>Kafka basics</a></li><li><a href=/docs/misc/old_hardware/>Old hardware</a></li><li><a href=/docs/languages/ class=collapsed>Languages</a></li><li><a href=/docs/misc/chromeos/>ChromeOS</a></li><li><a href=/docs/misc/macos/>macOS</a></li><li><a href=/docs/misc/mikrotik/>Mikrotik</a></li><li><a href=/docs/misc/tips_and_tricks/>Tips & Tricks</a></li></ul></nav><script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label>
+<strong>Apache Airflow fundamentals</strong>
+<label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#start-the-project>Start the project</a></li><li><a href=#the-essentials>The essentials</a><ul><li><a href=#core-components>Core components</a></li><li><a href=#2-common-architectures>2 Common Architectures</a></li><li><a href=#core-concepts>Core Concepts</a></li><li><a href=#task-lifecycle>Task Lifecycle</a></li><li><a href=#extras-and-providers>Extras and providers</a></li><li><a href=#upgrading-airflow>Upgrading Airflow</a></li></ul></li><li><a href=#interacting-with-apache-airflow>Interacting with Apache Airflow</a><ul><li><a href=#cli>CLI</a></li><li><a href=#rest-api>REST API</a></li></ul></li><li><a href=#dags-and-tasks>DAGs and Tasks</a><ul><li><a href=#dag-seketon>DAG seketon</a></li><li><a href=#demystifying-dag-scheduling>Demystifying DAG Scheduling</a></li><li><a href=#backfilling-and-catchup>Backfilling and Catchup</a></li><li><a href=#focus-on-operators>Focus on operators</a></li><li><a href=#executing-python-functions>Executing python functions</a></li><li><a href=#putting-dag-on-hold>Putting DAG on hold</a></li><li><a href=#executing-bash-commands>Executing Bash commands</a></li><li><a href=#define-the-path>Define the path</a></li><li><a href=#exchanging-data>Exchanging Data</a></li><li><a href=#failure>Failure</a></li></ul></li><li><a href=#executors>Executors</a></li><li><a href=#the-default-executor>The default executor</a><ul><li><a href=#concurrency-the-parameters-you-must-know>Concurrency. The parameters you must know.</a></li><li><a href=#start-scaling-the-airflow>Start scaling the Airflow</a></li><li><a href=#scaling-to-the-infinity>Scaling to the infinity</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=start-the-project>Start the project
+<a class=anchor href=#start-the-project>#</a></h2><p><a href=https://www.astronomer.io/docs/cloud/stable/develop/cli-quickstart>Astronomer CLI quickstart guide</a></p><p>To prevent error like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>Env file <span style=color:#e6db74>&#34;.env&#34;</span> found. Loading...
+buildkit not supported by daemon
+Error: command <span style=color:#960050;background-color:#1e0010>&#39;</span>docker build -t astronomer_f5dd6c/airflow:latest failed: failed to execute cmd: exit status <span style=color:#ae81ff>1</span>
+</code></pre></div><p>You need to update your Docker config with this piece of code:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#e6db74>&#34;features&#34;</span><span style=color:#960050;background-color:#1e0010>:</span> {
+    <span style=color:#f92672>&#34;buildkit&#34;</span>: <span style=color:#66d9ef>false</span>
+}
+</code></pre></div><p><a href=https://forum.astronomer.io/t/buildkit-not-supported-by-daemon-error-command-docker-build-t-airflow-astro-bcb837-airflow-latest-failed-failed-to-execute-cmd-exit-status-1/857>Source of the solution</a></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>mkdir &lt;directory-name&gt; <span style=color:#f92672>&amp;&amp;</span> cd &lt;directory-name&gt;
+astro dev init
+astro dev start
+</code></pre></div><p>It starts 3 containers:</p><ul><li>Postgres: Airflow&rsquo;s Metadata Database</li><li>Webserver: The Airflow component responsible for rendering the Airflow UI</li><li>Scheduler: The Airflow component responsible for monitoring and triggering tasks</li></ul><h2 id=the-essentials>The essentials
+<a class=anchor href=#the-essentials>#</a></h2><p><em>Airflow</em> if an orchestrator for creating dynamic data pipelines and executing tasks in the right order and at the right timec.</p><p>Airflow benefits:</p><ul><li>dynamic - data pipelines are described as a python script.</li><li>scalable - you can choose required type of executor (kubernetes for example) to run as many tasks as you need in distributed environment</li><li>interactive - there are 3 ways to interact with Airflow:<ul><li>Web UI</li><li>CLI</li><li>REST API</li></ul></li><li>extensible - you can customize Airflow by creating new plugin</li></ul><p>NB: Airflow IS NOT:</p><ul><li>a streaming solution</li><li>a data processing framework (if you need to precess TBs of data, use the Airflow to trigger the Spark job)</li></ul><h3 id=core-components>Core components
+<a class=anchor href=#core-components>#</a></h3><ul><li>Web Server - Flask server with GUnicorn, serving the Web UI</li><li>Scheduler - the heart of Airflow; responsible for schaduling and triggering tasks; for HA purposes you can run multiple schedulers</li><li>Metadata Database - you can use any compatible with SQLAlchemy DB (even MongoDB, but with limitations, for example you can&rsquo;t run multiple schadulers)</li></ul><p>Additional components:</p><ul><li>Executor - defines how your tasks are going to be executed by Airflow<ul><li>Queue</li></ul></li><li>Worker - defines where your tasks are actually executed; it is a process there task is executed</li></ul><h3 id=2-common-architectures>2 Common Architectures
+<a class=anchor href=#2-common-architectures>#</a></h3><h4 id=single-node>Single node
+<a class=anchor href=#single-node>#</a></h4><p>Node:</p><ul><li>Web Server</li><li>Metastore</li><li>Scheduler</li><li>Executor<ul><li>Queue</li></ul></li></ul><p>Workflow:</p><ul><li>Web Server interacts with Metastore and fetchs required data:<ul><li>statuses of tasks</li><li>users</li><li>permissions</li><li>etc</li></ul></li><li>If the task is ready to be scheduled, the Scheduler will:<ul><li>change the status of the task in the Metastore</li><li>create the instance object of this task</li><li>send the task object to the Queue of the Executor</li></ul></li><li>After that the task is ready to be fetched by the Worcker</li><li>Executor interacts with Metastore and updates the task status</li></ul><p>The Web Server doesn&rsquo;t interact directly with the Scheduler nor Executor.</p><h4 id=multi-nodes-celery>Multi nodes (Celery)
+<a class=anchor href=#multi-nodes-celery>#</a></h4><p>Node1:</p><ul><li>Web Server</li><li>Scheduler</li><li>Executor</li></ul><p>Node2:</p><ul><li>Metastore</li><li>Queue (in this case we need dedicated queue like RabbitMQ or Redis)</li></ul><p>Worker Node 1-n</p><ul><li>Airflow Worker</li></ul><p>Workflow:</p><ul><li>Web Server interacts with Metastore like in the Single Node installation</li><li>Scheduler interacts with the Metastore and the Executor</li><li>When the task is ready to be scheduled, it sends to the Executor</li><li>The Executor resends the task to the Queue</li><li>From the Queue task will be pulled and executed by the Workers</li></ul><h3 id=core-concepts>Core Concepts
+<a class=anchor href=#core-concepts>#</a></h3><p><em>DAG</em> - in Airflow is a Data pipeline.</p><p><em>Operator</em> - is an object for creating tasks in the a DAG.</p><p>Types of operators:</p><ul><li>action - allow you to execute something in your data pipeline; examples:<ul><li>python operator</li><li>shell op</li><li>postgres op</li><li>etc</li></ul></li><li>transfer - allow you to transfer data from the source to the destination; example:<ul><li>mysql-to-presto operator</li></ul></li><li>sensor - is a kind of a trigger for tasks; example:<ul><li>file sensor - will wait until some file will placed in a specific directory</li></ul></li></ul><p><em>Task</em> - is an instance of an operator in a DAG. When the task is ready to be scheduled, it becomes to:</p><p><em>Task instance</em> object - represents a specific run of a task: DAG + Task + Point of time</p><p><em>Dependencies</em> - describes relations between operators in a DAG</p><p><em>Workflow</em> - combination of all concepts described above.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>+---------------------------------+
+| DAG                             |
+| +----------+       +----------+ |
+| | Operator |       | Operator | |
+| | +------+ |       | +------+ | |
+| | | Task | |------&gt;| | Task | | |
+| | +------+ |       | +------+ | |
+| +----------+       +----------+ |
++---------------------------------+
+</code></pre></div><h3 id=task-lifecycle>Task Lifecycle
+<a class=anchor href=#task-lifecycle>#</a></h3><p>When you add new DAG file into the DAGs folder it parses by:</p><ul><li>Web Server - it parses DAGs every 30 seconds by default</li><li>Scheduler - parses NEW files every 5 minutes by default</li></ul><p>After that the Scheduler creates a <em>DagRun</em> object in the Metastore. This object is an instance of your DAG.</p><p>When the Task is ready to be scheduled, the Scheduler creates a TaskInstance object in the Metastore. And it has the status <em>Scheduled</em>.</p><p>When the Scheduler asigns the Task to the Executor, it has the status <em>Queued</em>.</p><p>When the Task has the <em>Queued</em> status, the Executer is ready to taje that task and execute it on the Worcker. Now the status is <em>Runing</em>.</p><p>While the task is executes, the Executor updates its status in the Metastore and when it will be done, the status will changed to <em>Success</em>.</p><p>The Scheduler checks the status of the <em>TaskInstance</em> object and if it is <em>Success</em> and there are no more tasks in this DAG.</p><p>Only after that the Web Server updates the UI.</p><h3 id=extras-and-providers>Extras and providers
+<a class=anchor href=#extras-and-providers>#</a></h3><p>Extras package - extends the functionality of the Airflow, for example it allows to run the AirFlow in the Celery mode. It extends the core of the Airflow.</p><p>Proveders allows you to add new functionality on top of the Airflow. Providers are separeted from the Airflow&rsquo;s core. For example - PostgreSQL provider.</p><h3 id=upgrading-airflow>Upgrading Airflow
+<a class=anchor href=#upgrading-airflow>#</a></h3><ol><li>DB</li></ol><ul><li>create a backup of the Metastore</li></ul><ol start=2><li>DAGs</li></ol><ul><li>make sure the is no deprecated features in your DAGs.</li><li>pause all the DAGs and make sure no tasks is running</li></ul><ol start=3><li>Upgrade Airflow</li><li>Upgrade the DB by</li></ol><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>airflow db upgrade
+</code></pre></div><ol start=5><li>Restart:</li></ol><ul><li>Scheduler</li><li>Web Server</li><li>Workers</li></ul><h2 id=interacting-with-apache-airflow>Interacting with Apache Airflow
+<a class=anchor href=#interacting-with-apache-airflow>#</a></h2><h3 id=cli>CLI
+<a class=anchor href=#cli>#</a></h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>airflow db init <span style=color:#75715e># Initialize the Metastore DB and generate required files and directories</span>
+airflow db upgrade <span style=color:#75715e># Upgrade DB&#39;s schema</span>
+airflow db reset <span style=color:#75715e># Erase the DB</span>
+
+airflow webserver <span style=color:#75715e># Start the Web Server</span>
+airflow scheduler <span style=color:#75715e># Start the Scheduler</span>
+airflow celery worker <span style=color:#75715e># Start the Worker</span>
+
+airflow dags <span style=color:#f92672>(</span>un<span style=color:#f92672>)</span>pause <span style=color:#75715e># (Un)pause a DAG</span>
+airflow dags trigger <span style=color:#75715e># Trigger a DAG</span>
+airflow dags list <span style=color:#75715e># List all DAGs</span>
+
+airflow tasks list <span style=color:#e6db74>${</span>DAG_ID<span style=color:#e6db74>}</span> <span style=color:#75715e># List all tasks of the specific DAG</span>
+airflow tasks test <span style=color:#e6db74>${</span>DAG_ID<span style=color:#e6db74>}</span> <span style=color:#e6db74>${</span>TASK_ID<span style=color:#e6db74>}</span> <span style=color:#e6db74>${</span>EXECITION_DATE<span style=color:#e6db74>}</span> <span style=color:#75715e># Usefull on adding new tasks, it allows to execute particular task regardles its dependencies; date format is YYYY-MM-DD</span>
+
+airflow dags backfill -s <span style=color:#e6db74>${</span>YYYY-MM-DD<span style=color:#e6db74>}</span> -e <span style=color:#f92672>{</span>YYYY-MM-DD<span style=color:#f92672>}</span> --reset_dagruns <span style=color:#e6db74>${</span>DAG_ID<span style=color:#e6db74>}</span> <span style=color:#75715e># Allows to rerun the past DAGs</span>
+</code></pre></div><h3 id=rest-api>REST API
+<a class=anchor href=#rest-api>#</a></h3><p><a href=https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html>Stable API documentation</a></p><h2 id=dags-and-tasks>DAGs and Tasks
+<a class=anchor href=#dags-and-tasks>#</a></h2><h3 id=dag-seketon>DAG seketon
+<a class=anchor href=#dag-seketon>#</a></h3><p>Example of the simples but valide empty DAG:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> airflow <span style=color:#f92672>import</span> DAG
+
+<span style=color:#66d9ef>with</span> DAG(dag_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;dag_name&#39;</span>) <span style=color:#66d9ef>as</span> dag:
+    None
+</code></pre></div><p>You just need to put this file into the DAG&rsquo;s folder.</p><p>By default the DAG has no owner and it is scheduled to execute every day at 00:00:00.</p><h3 id=demystifying-dag-scheduling>Demystifying DAG Scheduling
+<a class=anchor href=#demystifying-dag-scheduling>#</a></h3><ul><li>start_date - defines the date at which your DAG starts being scheduled</li><li>schedule_interval - define a frequency at which your DAG will be triggered; 24 hours by default<ul><li>NB: DAG will be triggered at start_date + scheduled_interval</li></ul></li><li>execution_date - begining of the execution period (equals to start_date)</li><li>start_date will shifted to start_date + scheduled_interval</li><li>end_date - the date at whict your DAG won&rsquo;t be scheduled anymore</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> airflow <span style=color:#f92672>import</span> DAG
+<span style=color:#f92672>from</span> airflow.operators.dummy <span style=color:#f92672>import</span> DummyOperator
+
+<span style=color:#f92672>from</span> datetime <span style=color:#f92672>import</span> datetime
+
+<span style=color:#75715e># Define the start_date for the whole DAG</span>
+<span style=color:#66d9ef>with</span> DAG(dag_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;simple_dag&#39;</span>, schedule_interval<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;*/10 * * * *&#34;</span>, start_date<span style=color:#f92672>=</span>datetime(<span style=color:#ae81ff>2021</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1</span>)) <span style=color:#66d9ef>as</span> dag:
+    task_1 <span style=color:#f92672>=</span> DummyOperator(
+        task_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;task_1&#39;</span>,
+        <span style=color:#75715e># Define the start_date for the specific task, but it&#39;s a bad practice</span>
+        start_date<span style=color:#f92672>=</span>datetime(<span style=color:#ae81ff>2021</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>)
+    )
+</code></pre></div><p>By default the datetime in UTC and all dates in Airflow are stored in UTC.</p><p>If you define the start_date in the past, by default Airflow will trigger all non triggered dagRuns between the start_date and the current date.</p><p>NB: NEVER use <code>datetime.now()</code> as a start_date, because of start_date shifting before each DAG scheduling, this DAG will never run.</p><p><code>schedule_interval</code> parameter may be represented as:</p><ul><li>a cron-string (defines the absolute time):<ul><li>*/10 * * * *</li></ul></li><li>a preseted value like:<ul><li>@daily</li><li>@weekly</li></ul></li><li><code>timedelta</code> object (defines relative for previous run time):<ul><li><code>timedelta(hours=7)</code></li><li><code>timedelta(days=1)</code></li></ul></li><li>None (in this case DAG will never being autimatically triggered by scheduler)</li></ul><h3 id=backfilling-and-catchup>Backfilling and Catchup
+<a class=anchor href=#backfilling-and-catchup>#</a></h3><p><em>Backfilling</em> allows you to run or rerun past non triggered or already triggered dagRuns.</p><p>By default Airflow will rau all non triggered dagRuns between the start_date and the current date.</p><p>We can enable or disable the behavior with <code>catchup: bool = True</code> parameter of the <em>DAG()</em> object. If you set this parameter to <code>False</code>, only the latest non triggered dagRun will be scheduled.</p><p>At the addition you can set <code>max_active_runs: int</code> to specify max number of runs for specific DAG, which allowed to run at the same time. With <code>catchup=True</code> and this parameter you can limit number of simultaneously runned DAGs.</p><p>Even if the <code>catchup=False</code> you still can start backfilling process from CLI.</p><h3 id=focus-on-operators>Focus on operators
+<a class=anchor href=#focus-on-operators>#</a></h3><p><em>An operator</em> is a task in your DAG.</p><p>If you have more than one buisness task you shouldn&rsquo;t put all of them into a single operator, because if one of this tasks fails, on retry you will rerun all of this tasks.</p><p>Onother words, you should to create a separate operator for each your task. For example data loading and data cleeaning should be executed in separete operators.</p><p>Operator should be idempotent.</p><p>You can set default arguments for each task with <code>default_args: dict</code> parameter of DAG object:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>defaults_args <span style=color:#f92672>=</span> {
+    <span style=color:#e6db74>&#39;retry&#39;</span>: <span style=color:#ae81ff>5</span>,
+    <span style=color:#e6db74>&#39;retry_delay&#39;</span>: timedelta(minutes<span style=color:#f92672>=</span><span style=color:#ae81ff>5</span>)
+}
+
+<span style=color:#66d9ef>with</span> DAG(dag_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;simple_dag&#39;</span>, default_args<span style=color:#f92672>=</span>defaults_args, <span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    task_1 <span style=color:#f92672>=</span> DummyOperator(
+        task_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;task_1&#39;</span>,
+    )
+
+    task_2 <span style=color:#f92672>=</span> DummyOperator(
+        task_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;task_2&#39;</span>,
+        <span style=color:#75715e># this parameter overrides the default</span>
+        retry<span style=color:#f92672>=</span><span style=color:#ae81ff>3</span>
+    )
+
+    task_3 <span style=color:#f92672>=</span> DummyOperator(
+        task_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;task_3&#39;</span>,
+    )
+</code></pre></div><p><a href=https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/baseoperator/index.html>Documentation</a> for the <code>baseoperator</code> class.</p><h3 id=executing-python-functions>Executing python functions
+<a class=anchor href=#executing-python-functions>#</a></h3><p>The Python operator is the most common used operator in the Airflow.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> airflow <span style=color:#f92672>import</span> DAG
+<span style=color:#f92672>from</span> airflow.operators.python <span style=color:#f92672>import</span> PythonOperator
+<span style=color:#f92672>from</span> airflow.utils.dates <span style=color:#f92672>import</span> days_ago
+
+defaults_args <span style=color:#f92672>=</span> {
+    <span style=color:#e6db74>&#39;retry&#39;</span>: <span style=color:#ae81ff>5</span>,
+    <span style=color:#e6db74>&#39;retry_delay&#39;</span>: timedelta(minutes<span style=color:#f92672>=</span><span style=color:#ae81ff>5</span>)
+}
+
+<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_downloading_data</span>(my_param, ds, <span style=color:#f92672>**</span>kwargs):
+    <span style=color:#66d9ef>print</span>(<span style=color:#e6db74>&#39;Data is downloaded&#39;</span>)
+    <span style=color:#75715e># call all kwargs</span>
+    <span style=color:#66d9ef>print</span>(kwargs)
+    <span style=color:#75715e># call one specific common parameter</span>
+    <span style=color:#66d9ef>print</span>(ds)
+    <span style=color:#75715e># call a custom parameter, defined in the Operator&#39;s os_kwargs argument</span>
+    <span style=color:#66d9ef>print</span>(my_param)
+
+<span style=color:#66d9ef>with</span> DAG(dag_id<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;simple_dag&#39;</span>, default_args<span style=color:#f92672>=</span>defaults_args, <span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+    downloading_data <span style=color:#f92672>=</span> PythonOperator(
+        task_id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;downloading_data&#39;</span>,
+        python_callable <span style=color:#f92672>=</span> _downloading_data
+        <span style=color:#75715e># Here you can specify custom params</span>
+        op_kwargs <span style=color:#f92672>=</span> {<span style=color:#e6db74>&#39;my_param&#39;</span>: <span style=color:#ae81ff>42</span>}
+    )
+</code></pre></div><p>To get access to the DAG context you just need to pass <code>**kwargs</code> to the python function of the name of the specific parameter.</p><h3 id=putting-dag-on-hold>Putting DAG on hold
+<a class=anchor href=#putting-dag-on-hold>#</a></h3><p><em>File sensor</em> - special type of operator, which waits when a file will putted into specific place.</p><p>In UI:</p><p>Admin -> Connections -> +</p><ul><li>conn id - id, which you will use in DAG&rsquo;s code</li><li>conn type - is required connection unavailable, you can add it by install provider</li><li>extra - this field is not secure; you have to put a JSON to it and for <code>file</code> conn type, this JSON should contain only path to directory, where file should exists:</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
+  <span style=color:#f92672>&#34;path&#34;</span>: <span style=color:#e6db74>&#34;/tmp/&#34;</span>
+}
+</code></pre></div><p>How to use the FileSensor operator:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> airflow.sensors.filesystem <span style=color:#f92672>import</span> FileSensor
+
+<span style=color:#66d9ef>with</span> DAG(<span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    <span style=color:#f92672>...</span>
+
+    waiting_file <span style=color:#f92672>=</span> FileSensor(
+        task_id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;waiting_for_data&#34;</span>,
+        fs_conn_id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;fs_default&#34;</span>,
+        filepath <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;my_file.txt&#39;</span>
+        <span style=color:#75715e># Determines how often the connection will be checked; 30 sec by default</span>
+        poke_interval <span style=color:#f92672>=</span> <span style=color:#ae81ff>15</span>
+    )
+</code></pre></div><h3 id=executing-bash-commands>Executing Bash commands
+<a class=anchor href=#executing-bash-commands>#</a></h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> airflow.operators.bash <span style=color:#f92672>import</span> BashOperator
+
+<span style=color:#66d9ef>with</span> DAG(<span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    <span style=color:#f92672>...</span>
+
+    processing_data <span style=color:#f92672>=</span> BashOperator(
+        task_id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;processing_data&#39;</span>,
+        bash_command <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;exit 0&#39;</span>
+    )
+</code></pre></div><h3 id=define-the-path>Define the path
+<a class=anchor href=#define-the-path>#</a></h3><p>After all tasks are implemented, you need to defile the dependencies between tasks.</p><p>There are two ways to define the dependencies between tasks:</p><ul><li>with <code>set_upstream</code> or <code>set_downstream</code> methods</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>with</span> DAG(<span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    <span style=color:#f92672>...</span>
+
+    downloading_data<span style=color:#f92672>.</span>set_downstream(waiting_file)
+    processing_data<span style=color:#f92672>.</span>set_upstream(waiting_file)
+</code></pre></div><ul><li>with right (&#187; <code>set_downstream</code> equivalent) or left (&#171; <code>set_upstream</code> equivalent) bit-shift operator (more commonely used option)</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>with</span> DAG(<span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    <span style=color:#f92672>...</span>
+
+    downloading_data <span style=color:#f92672>&gt;&gt;</span> waiting_file <span style=color:#f92672>&gt;&gt;</span> processing_data
+</code></pre></div><h4 id=chain-function>chain() function
+<a class=anchor href=#chain-function>#</a></h4><p>Completely the same DAG you can get with the <code>cain()</code> function:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> airflow.models.baseoperator <span style=color:#f92672>import</span> chain
+
+<span style=color:#66d9ef>with</span> DAG(<span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    <span style=color:#f92672>...</span>
+
+    chain(downloading_data, waiting_file, processing_data)
+</code></pre></div><h4 id=multiple-tasks>Multiple tasks
+<a class=anchor href=#multiple-tasks>#</a></h4><p>To execute multiple tasks on the same DAG level (i.e. simultaneously), you just need to put them into the list.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>with</span> DAG(<span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    <span style=color:#f92672>...</span>
+
+    downloading_data <span style=color:#f92672>&gt;&gt;</span> [ waiting_file, processing_data ]
+</code></pre></div><h4 id=cross-dependencies>Cross dependencies
+<a class=anchor href=#cross-dependencies>#</a></h4><p>Also you can define cross dependencies between tasks:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>
+<span style=color:#f92672>from</span> airflow.models.baseoperator <span style=color:#f92672>import</span> cross_downstream
+
+<span style=color:#66d9ef>with</span> DAG(<span style=color:#f92672>...</span>) <span style=color:#66d9ef>as</span> dag:
+
+    <span style=color:#f92672>...</span>
+
+    cross_downstream([downloading_data, sone_another_task], [waiting_file, processing_data])
+</code></pre></div><p>Here we will get:</p><p>downloading_data &#187; [waiting_file, processing_data] AND sone_another_task &#187; [waiting_file, processing_data]</p><p>This function required because you couldn&rsquo;t create dependencies directly between lists of tasks.</p><h3 id=exchanging-data>Exchanging Data
+<a class=anchor href=#exchanging-data>#</a></h3><p><em>XCom</em> (cross communication) - is the mechanism, which allows you to exchange smal amount of data between tasks.</p><p>In the UI you can access all the XComs via <code>Admin->XComs</code> menu.</p><p>The 1st way to implement XUom is returning data from the function</p><p>For getting access to the XCom from another task, we have to use the context of a dagRun and use the <code>ti</code> (for <em>taskinstance</em> ) object. With help of this object we can pull the required XCom:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_first_task</span>():
+  <span style=color:#f92672>...</span>
+  <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>42</span>
+
+<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_seconf_task</span>(ti):
+  my_xcom <span style=color:#f92672>=</span> ti<span style=color:#f92672>.</span>xcom_pull(key<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;return_value&#39;</span>, task_ids<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#39;first_task&#39;</span>])
+  <span style=color:#f92672>...</span>
+</code></pre></div><p>Also you may push some value to XCom without returning from the function:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>
+<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_another_task</span>(ti):
+  <span style=color:#f92672>...</span>
+  ti<span style=color:#f92672>.</span>xcom_push(key<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;my_key&#39;</span>, value<span style=color:#f92672>=</span><span style=color:#ae81ff>42</span>)
+</code></pre></div><p>NB: XComs are storred in the Metadata DB and they are limited in size, based on the DB which you use:</p><ul><li>SQLite - up to 2Gb</li><li>PostgreSQL - up to 1 Gb</li><li>MySQL - up to 64 Kb (sic!)</li></ul><h3 id=failure>Failure
+<a class=anchor href=#failure>#</a></h3><p>If the task is finished with an error, Airflow automatically trys to run it again.</p><p>You can rerun the task manually from the UI by clicking <code>clear</code> button for the required task_instance. For applying it to the multiple tasks at the same time, use <code>Browse->Task Instances</code> menu and search filters on that page.</p><p>You can enable email notifications by setting:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>default_args <span style=color:#f92672>=</span> {
+  <span style=color:#f92672>...</span>
+  <span style=color:#e6db74>&#39;email_on_failure&#39;</span>: True,
+  <span style=color:#e6db74>&#39;email_on_retry&#39;</span>: True,
+  <span style=color:#e6db74>&#39;email&#39;</span>: <span style=color:#e6db74>&#39;admin@example.com&#39;</span>
+}
+</code></pre></div><p>Also you may add some custom logic on failure, by specifying argument <code>on_failure_callback</code> for the operator.</p><h2 id=executors>Executors
+<a class=anchor href=#executors>#</a></h2><h2 id=the-default-executor>The default executor
+<a class=anchor href=#the-default-executor>#</a></h2><p><em>Executor</em> defines where your tasks are going to executed in your Airflow instance.</p><p>The default executor is <em>SequentialExecutor</em> and it is based on SQLite), so it executes task only one after another.</p><p>Sequential is usefull for debugging purpose or for experiments.</p><p>You may configure the executor in Airflow&rsquo;s main config: <code>/usr/local/airflow/airflow.cfg</code> (in the <em>scheduler</em> container).</p><p>For configuration you should pay attention for these params:</p><ul><li>executor</li><li>sql_alchemy_conn</li></ul><h3 id=concurrency-the-parameters-you-must-know>Concurrency. The parameters you must know.
+<a class=anchor href=#concurrency-the-parameters-you-must-know>#</a></h3><p>Parameters:</p><ul><li>parallelism (default is 32) - defines the max number of tasks that you can execute at the same time.</li><li>dag_concurrency (16) - defines the number of tasks that can be executed in parallel across all of the dagRuns</li><li>max_active_runs_per_dag (16) - defines the max number of dagRuns that can run at the same time for a given DAG</li><li>max_active_runs - defines the max number of simultaneos dagRuns for a specific DAG</li><li>concurrency - set the number of tasks for a given DAG</li></ul><h3 id=start-scaling-the-airflow>Start scaling the Airflow
+<a class=anchor href=#start-scaling-the-airflow>#</a></h3><p><em>Local executor</em> - allows you to execute multiple tasks at the same time on a single macine. Each triggered task is executed in a subprocess.</p><p>To use it, you need to change the <code>executor</code> parameter to <code>LocalExecutor</code> and add connection for DB like PostgreSQL.</p><h3 id=scaling-to-the-infinity>Scaling to the infinity
+<a class=anchor href=#scaling-to-the-infinity>#</a></h3><h4 id=salary-executor>Salary executor
+<a class=anchor href=#salary-executor>#</a></h4><p>Salary is a kind of a distributed task queue.</p><p>Example of an architecture:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>+----------------+       +------------------+      +----------+
+| Node 1         |       | Node 2           |   +--| Worker 1 |
+| +------------+ |       | +--------------+ |   |  +----------+
+| | Web Server | |       | | Metadata DB* | |  2|  +----------+
+| +------------+ |       | +--------------+ |   |  | Worker 2 |
+| +------------+ |   1   | +--------------+ |   |  +----------+
+| | Scheduler  |-|-------|&gt;|    Queue**   |&lt;|---+  +----------+
+| +------------+ |       | +--------------+ |      | Worker 3 |
++----------------+       +------------------+      +----------+
+
+* - for example - PostgreSQL
+** - RabbitMQ or Redis
+
+1 - a task is pushed by te executor to the queue
+2 - one of the workers pulls the task from the queue and execute the task
+</code></pre></div><p>Each worker machine must have Airflow installed as well as all dependencies for each DAG.</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><nav id=TableOfContents><ul><li><a href=#start-the-project>Start the project</a></li><li><a href=#the-essentials>The essentials</a><ul><li><a href=#core-components>Core components</a></li><li><a href=#2-common-architectures>2 Common Architectures</a></li><li><a href=#core-concepts>Core Concepts</a></li><li><a href=#task-lifecycle>Task Lifecycle</a></li><li><a href=#extras-and-providers>Extras and providers</a></li><li><a href=#upgrading-airflow>Upgrading Airflow</a></li></ul></li><li><a href=#interacting-with-apache-airflow>Interacting with Apache Airflow</a><ul><li><a href=#cli>CLI</a></li><li><a href=#rest-api>REST API</a></li></ul></li><li><a href=#dags-and-tasks>DAGs and Tasks</a><ul><li><a href=#dag-seketon>DAG seketon</a></li><li><a href=#demystifying-dag-scheduling>Demystifying DAG Scheduling</a></li><li><a href=#backfilling-and-catchup>Backfilling and Catchup</a></li><li><a href=#focus-on-operators>Focus on operators</a></li><li><a href=#executing-python-functions>Executing python functions</a></li><li><a href=#putting-dag-on-hold>Putting DAG on hold</a></li><li><a href=#executing-bash-commands>Executing Bash commands</a></li><li><a href=#define-the-path>Define the path</a></li><li><a href=#exchanging-data>Exchanging Data</a></li><li><a href=#failure>Failure</a></li></ul></li><li><a href=#executors>Executors</a></li><li><a href=#the-default-executor>The default executor</a><ul><li><a href=#concurrency-the-parameters-you-must-know>Concurrency. The parameters you must know.</a></li><li><a href=#start-scaling-the-airflow>Start scaling the Airflow</a></li><li><a href=#scaling-to-the-infinity>Scaling to the infinity</a></li></ul></li></ul></nav></aside></main></body></html>
